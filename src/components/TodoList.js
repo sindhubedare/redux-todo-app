@@ -1,11 +1,17 @@
 import React, { Component } from 'react'
 import '../syles/TodoList.css';
+import {connect} from 'react-redux';
+import {UPDATE_TODO_LIST} from '../actions/todoActions'
 
-export default class TodoList extends Component {
+const mapStateToPros = (state) =>({
+  savedTodoItems: state.savedTodoItems
+})
+
+class TodoList extends Component {
   constructor() {
     super()
     this.state = {
-      savedTodoItems: ["Make a todo list of all my todo lists", "Make a playlist for every possible occasion", "Stop checking phone compulsively"],
+      //savedTodoItems: ["Make a todo list of all my todo lists", "Make a playlist for every possible occasion", "Stop checking phone compulsively"],
       inputtedItem : ''
     }
     this.submitForm = this.submitForm.bind(this);
@@ -21,12 +27,13 @@ export default class TodoList extends Component {
 
     // The parameters "state" & "props" are copies of this components state and props 
     // That way we can manipulate them without touching the real state or real props 
-    this.setState((state, props) => {
+    /*this.setState((state, props) => {
 
       state.savedTodoItems.push(inputtedItem.value);
       return {savedTodoItems: state.savedTodoItems, inputtedItem: ''};
-    });
-
+    })*/;
+    this.props.dispatch({type:UPDATE_TODO_LIST,payload:inputtedItem.value})
+    this.setState({inputtedItem: ''})
 
   }
 
@@ -42,7 +49,7 @@ export default class TodoList extends Component {
     // loop through all todo items in state using map() 
     // & render a <h5> tag for each todo item
     // -------------------------------------------------
-    const listOfItems = this.state.savedTodoItems.map((item, index) => {
+    const listOfItems = this.props.savedTodoItems.savedTodoItems.map((item, index) => {
       // console.log("testing list items****", id)
       return (<div id="item-wrapper" key={index}><p id="item" >{item}</p> </div>)
     })
@@ -64,3 +71,5 @@ export default class TodoList extends Component {
     )
   }
 }
+
+export default connect(mapStateToPros)(TodoList);
